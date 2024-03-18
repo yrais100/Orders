@@ -1,0 +1,32 @@
+﻿@typeparam Titem
+
+<h3>GenericList</h3>
+
+@if (MyList is null)
+{
+    @if(Loading is null)
+    {
+        <div class="d-flex justify-content-center aling-items-center">
+            <img src="https://cdn.pixabay.com/animation/2023/03/20/02/45/02-45-27-186_512.gif" />
+        </div>
+    }
+    else
+    {
+        @Loading
+    }
+}
+else if(MyList.Count == 0)
+{
+    @if (NoRecords is null)
+    {
+        <p>No hay registros para mostrar...</p>
+    }
+    else
+    {
+        @NoRecords
+    }
+}
+else
+{
+    @Body
+}
