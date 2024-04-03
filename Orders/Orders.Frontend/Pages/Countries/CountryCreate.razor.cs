@@ -1,17 +1,18 @@
 ﻿using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
+using Orders.Frontend.Shared;
 using Orders.Shared.Entities;
 
 namespace Orders.Frontend.Pages.Countries
 {
     public partial class CountryCreate
     {
-        private Countryform? countryform;
+        private Country country = new();
+        public FormWithName<Country>? countryForm { get; set; }
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        private Country country = new();
 
         private async Task CreateAsync()
         {
@@ -35,7 +36,7 @@ namespace Orders.Frontend.Pages.Countries
         }
         private void Return()
         {
-            countryform!.FormPostedSuccessfully = true;
+            countryForm!.FormPostedSuccessfully = true;
             NavigationManager.NavigateTo("/countries");
         }
 
