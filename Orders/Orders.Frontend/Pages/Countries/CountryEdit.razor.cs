@@ -26,7 +26,7 @@ namespace Orders.Frontend.Pages.Countries
                 }
                 else
                 {
-                    var message = await responseHttp.GetErrorMessageAsyn();
+                    var message = await responseHttp.GetErrorMessageAsync();
                     await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 }
             }
@@ -41,7 +41,7 @@ namespace Orders.Frontend.Pages.Countries
             var response = await Repository.PutAsync("/api/countries", country);
             if (response.Error)
             {
-                var message = await response.GetErrorMessageAsyn();
+                var message = await response.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message);
                 return;
             }

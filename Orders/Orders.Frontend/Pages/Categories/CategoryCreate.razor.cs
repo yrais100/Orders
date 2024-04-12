@@ -19,7 +19,7 @@ namespace Orders.Frontend.Pages.Categories
             var responseHttp = await Repository.PostAsync("/api/categories", category);
             if (responseHttp.Error)
             {
-                var message = await responseHttp.GetErrorMessageAsyn();
+                var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }

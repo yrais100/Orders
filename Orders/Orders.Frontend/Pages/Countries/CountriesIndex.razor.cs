@@ -25,7 +25,7 @@ namespace Orders.Frontend.Pages.Countries
             var responseHttp = await Repository.GetAsync<List<Country>>("api/countries");
             if (responseHttp.Error)
             {
-                var message = await responseHttp.GetErrorMessageAsyn();
+                var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
@@ -56,7 +56,7 @@ namespace Orders.Frontend.Pages.Countries
                 }
                 else
                 {
-                    var message = await responseHttp.GetErrorMessageAsyn();
+                    var message = await responseHttp.GetErrorMessageAsync();
                     await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 }
                 return;

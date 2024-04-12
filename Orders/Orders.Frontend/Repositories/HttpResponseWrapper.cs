@@ -15,7 +15,7 @@ namespace Orders.Frontend.Repositories
         public bool Error { get; }
         public HttpResponseMessage HttpResponseMessage { get; }
 
-        public async Task<string?> GetErrorMessageAsyn()
+        public async Task<string?> GetErrorMessageAsync()
         {
             if (!Error)
             {
