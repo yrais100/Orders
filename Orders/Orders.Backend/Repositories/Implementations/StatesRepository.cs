@@ -74,7 +74,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-        public async override Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
+        public override async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination)
         {
             var queryable = _context.states
                 .Where(x => x.Country!.Id == pagination.Id)
@@ -94,5 +94,12 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        public async Task<IEnumerable<State>> GetComboAsync(int countryId)
+        {
+            return await _context.states
+                .Where(s => s.CountryId == countryId)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+        }
     }
 }

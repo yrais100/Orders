@@ -14,6 +14,7 @@ namespace Orders.Backend.Controllers
     public class CategoriesController : GenericController<Category>
     {
         private readonly ICategoriesUnitOfWork _categoriesUnitOfWork;
+
         public CategoriesController(IGenericUnitOfWork<Category> unitOfWork, ICategoriesUnitOfWork categoriesUnitOfWork) : base(unitOfWork)
         {
             _categoriesUnitOfWork = categoriesUnitOfWork;
@@ -39,6 +40,13 @@ namespace Orders.Backend.Controllers
                 return Ok(action.Result);
             }
             return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("combo")]
+        public async Task<IActionResult> GetComboAsync()
+        {
+            return Ok(await _categoriesUnitOfWork.GetComboAsync());
         }
     }
 }
