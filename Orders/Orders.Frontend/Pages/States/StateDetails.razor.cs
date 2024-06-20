@@ -28,6 +28,13 @@ namespace Orders.Frontend.Pages.States
             await LoadAsync();
         }
 
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
+        }
+
         private async Task SelectedPageAsync(int page)
         {
             currentPage = page;
