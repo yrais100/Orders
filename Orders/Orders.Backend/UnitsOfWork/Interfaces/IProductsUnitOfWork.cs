@@ -23,5 +23,9 @@ namespace Orders.Backend.UnitsOfWork.Interfaces
         Task<ActionResponse<Product>> AddFullAsync(ProductDTO productDTO);
 
         Task<ActionResponse<Product>> UpdateFullAsync(ProductDTO productDTO);
+
+        Task<ActionResponse<ImageDTO>> AddImageAsync(ImageDTO imageDTO);
+
+        Task<ActionResponse<ImageDTO>> RemoveLastImageAsync(ImageDTO imageDTO);
     }
 }

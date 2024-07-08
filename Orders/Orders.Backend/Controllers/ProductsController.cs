@@ -31,27 +31,28 @@ namespace Orders.Backend.Controllers
             return NoContent();
         }
 
-        //[HttpPost("addImages")]
-        //public async Task<IActionResult> PostAddImagesAsync(ImageDTO imageDTO)
-        //{
-        //    var action = await _productsUnitOfWork.AddImageAsync(imageDTO);
-        //    if (action.WasSuccess)
-        //    {
-        //        return Ok(action.Result);
-        //    }
-        //    return BadRequest(action.Message);
-        //}
+        [HttpPost("addImages")]
+        public async Task<IActionResult> PostAddImagesAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.AddImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
 
-        //[HttpPost("removeLastImage")]
-        //public async Task<IActionResult> PostRemoveLastImageAsync(ImageDTO imageDTO)
-        //{
-        //    var action = await _productsUnitOfWork.RemoveLastImageAsync(imageDTO);
-        //    if (action.WasSuccess)
-        //    {
-        //        return Ok(action.Result);
-        //    }
-        //    return BadRequest(action.Message);
-        //}
+        [HttpPost("removeLastImage")]
+        public async Task<IActionResult> PostRemoveLastImageAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.RemoveLastImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
