@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orders.Backend.Helpers;
-using Orders.Shared.Enums;
 using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.DTOs;
+using Orders.Shared.Enums;
 
 namespace Orders.Backend.Controllers
 {
@@ -22,16 +22,26 @@ namespace Orders.Backend.Controllers
             _ordersUnitOfWork = ordersUnitOfWork;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostAsync(OrderDTO saleDTO)
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(OrderDTO orderDTO)
         {
-            var response = await _ordersHelper.ProcessOrderAsync(User.Identity!.Name!, saleDTO.Remarks);
+            var response = await _ordersUnitOfWork.UpdateFullAsync(User.Identity!.Name!, orderDTO);
             if (response.WasSuccess)
             {
-                return NoContent();
+                return Ok(response.Result);
             }
-
             return BadRequest(response.Message);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _ordersUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound(response.Message);
         }
 
         [HttpGet]
@@ -56,5 +66,16 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(OrderDTO orderDTO)
+        {
+            var response = await _ordersHelper.ProcessOrderAsync(User.Identity!.Name!, orderDTO.Remarks);
+            if (response.WasSuccess)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
     }
 }
