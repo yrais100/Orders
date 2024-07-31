@@ -4,22 +4,20 @@ using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 
-namespace Orders.Frontend.Pages.Cart
+namespace Orders.Frontend.Pages.Auth
 {
-    [Authorize(Roles = "Admin, User")]
-    public partial class OrdersIndex
+    [Authorize(Roles = "Admin")]
+    public partial class UserIndex
     {
-        [Inject] private IRepository repository { get; set; } = null!;
-
-        [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
-
+        public List<User>? Users { get; set; }
         private int currentPage = 1;
         private int totalPages;
 
-        public List<Order>? Orders { get; set; }
-        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
+        [Inject] private IRepository Repository { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
-
+        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,6 +30,13 @@ namespace Orders.Frontend.Pages.Cart
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
+        }
+
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
         }
 
         private async Task SelectedPageAsync(int page)
@@ -65,30 +70,44 @@ namespace Orders.Frontend.Pages.Cart
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/orders?page={page}&recordsnumber={RecordsNumber}";
-            var response = await repository.GetAsync<List<Order>>(url);
+            var url = $"api/accounts/all?page={page}&recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+            var response = await Repository.GetAsync<List<User>>(url);
             if (response.Error)
             {
                 var message = await response.GetErrorMessageAsync();
-                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return false;
             }
-            Orders = response.Response;
+            Users = response.Response;
             return true;
         }
 
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
-            var url = $"api/orders/totalPages?recordsnumber={RecordsNumber}";
-            var response = await repository.GetAsync<int>(url);
+            var url = $"api/accounts/totalPages?recordsnumber={RecordsNumber}";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+
+            var response = await Repository.GetAsync<int>(url);
             if (response.Error)
             {
                 var message = await response.GetErrorMessageAsync();
-                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
             totalPages = response.Response;
+        }
+
+        private async Task ApplyFilterAsync()
+        {
+            await LoadAsync();
         }
     }
 }

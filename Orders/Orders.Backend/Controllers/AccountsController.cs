@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Orders.Backend.Helpers;
+using Orders.Backend.Repositories.Interfaces;
 using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
@@ -21,14 +22,16 @@ namespace Orders.Backend.Controllers
         private readonly IConfiguration _configuration;
         private readonly IFileStorage _fileStorage;
         private readonly IMailHelper _mailHelper;
+        private readonly IUsersRepository _usersRepository;
         private readonly string _container;
 
-        public AccountsController(IUsersUnitOfWork usersUnitOfWork, IConfiguration configuration, IFileStorage fileStorage, IMailHelper mailHelper)
+        public AccountsController(IUsersUnitOfWork usersUnitOfWork, IConfiguration configuration, IFileStorage fileStorage, IMailHelper mailHelper, IUsersRepository usersRepository)
         {
             _usersUnitOfWork = usersUnitOfWork;
             _configuration = configuration;
             _fileStorage = fileStorage;
             _mailHelper = mailHelper;
+            _usersRepository = usersRepository;
             _container = "user";
         }
 
@@ -280,6 +283,28 @@ namespace Orders.Backend.Controllers
             }
 
             return BadRequest(result.Errors.FirstOrDefault()!.Description);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        {
+            var response = await _usersUnitOfWork.GetAsync(pagination);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("totalPages")]
+        public async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
+        {
+            var action = await _usersUnitOfWork.GetTotalPagesAsync(pagination);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
         }
 
     }

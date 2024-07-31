@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
+using Orders.Shared.Responses;
 
 namespace Orders.Backend.Repositories.Interfaces
 {
@@ -32,6 +33,9 @@ namespace Orders.Backend.Repositories.Interfaces
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
 
+        Task<ActionResponse<IEnumerable<User>>> GetAsync(PaginationDTO pagination);
+
+        Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination);
 
         Task LogoutAsync();
     }
